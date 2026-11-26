@@ -1,0 +1,205 @@
+{
+  "brand": {
+    "name": "CREMA",
+    "displayName": "Crema",
+    "wordmarkLower": "crema",
+    "tagline": "Espresso, Cappuccino & Slow Evenings",
+    "location": "Kemang Selatan 18, South Jakarta",
+    "email": "brand@cremacafe.example",
+    "copyright": "© 2026 CREMA · Brand System by Proiectum Studio",
+    "studio": {
+      "name": "Proiectum Studio",
+      "url": "https://proiectum.studio",
+      "location": "South Tangerang, Indonesia"
+    },
+    "lastUpdated": "November 2026"
+  },
+  "meta": {
+    "title": "CREMA — Brand Guidelines Manual",
+    "description": "Living editorial brand manual and design system for CREMA, crafted as a portfolio case study by Proiectum Studio.",
+    "notFoundTitle": "404 — CREMA Brand Manual",
+    "notFoundDescription": "A missing page in the CREMA espresso bar brand manual.",
+    "ogImage": "/og-cover.jpg",
+    "canonicalUrl": "/"
+  },
+  "tokens": {
+    "canvas": "#F4EFE6",
+    "ink": "#1B120E",
+    "inkMuted": "#594A42",
+    "accentFootnote": "#B86220",
+    "accentHighlight": "#DDA04B",
+    "accentHighlightSoft": "#F3DFC1"
+  },
+  "typography": {
+    "display": "Rubik",
+    "body": "Geist",
+    "mono": "Geist Mono"
+  },
+  "palette": [
+    {
+      "id": "warm-timber",
+      "name": "Warm Timber",
+      "legacyName": "Morning Porcelain",
+      "hex": "#8C4E29",
+      "legacyHexes": ["#96B8CC", "#96b8cc", "#9EC3D8", "#9ec3d8", "#9fc3d8"],
+      "rgb": "140 78 41",
+      "legacyRgb": "150 184 204",
+      "cmyk": "26 67 84 27",
+      "legacyCmyk": "27 10 0 20",
+      "hsl": "22 55% 35%",
+      "legacyHsl": "202 35% 69%",
+      "pantone": "7575 C",
+      "legacyPantone": "545 C",
+      "textOnDark": true
+    },
+    {
+      "id": "steamed-milk",
+      "name": "Steamed Milk",
+      "legacyName": "Steamed Milk",
+      "hex": "#EBE4D7",
+      "legacyHexes": ["#E8E4D8", "#e8e4d8", "#E8E6DC", "#e8e6dc"],
+      "rgb": "235 228 215",
+      "legacyRgb": "232 228 216",
+      "cmyk": "6 7 13 0",
+      "legacyCmyk": "0 2 7 9",
+      "hsl": "39 32% 88%",
+      "legacyHsl": "45 24% 88%",
+      "pantone": "Warm Gray 1 C",
+      "legacyPantone": "Warm Gray 1 C",
+      "textOnDark": false
+    },
+    {
+      "id": "caramel-crema",
+      "name": "Caramel Crema",
+      "legacyName": "Caramel Amber",
+      "hex": "#DDA04B",
+      "legacyHexes": ["#E4A853", "#e4a853", "#F3CD86", "#f3cd86", "#fcbdbd", "#FCBDBD"],
+      "rgb": "221 160 75",
+      "legacyRgb": "228 168 83",
+      "cmyk": "12 39 78 1",
+      "legacyCmyk": "0 26 64 11",
+      "hsl": "35 68% 58%",
+      "legacyHsl": "35 73% 61%",
+      "pantone": "7408 C",
+      "legacyPantone": "7408 C",
+      "textOnDark": false
+    },
+    {
+      "id": "roasted-espresso",
+      "name": "Roasted Espresso",
+      "legacyName": "Roasted Espresso",
+      "hex": "#24110C",
+      "legacyHexes": ["#2B0D0A", "#2b0d0a", "#3D0202", "#3d0202", "#260202", "rgb(43,13,10)", "rgb(43, 13, 10)", "rgb(38,2,2)", "rgb(38, 2, 2)"],
+      "rgb": "36 17 12",
+      "legacyRgb": "43 13 10",
+      "cmyk": "50 74 78 82",
+      "legacyCmyk": "0 70 77 83",
+      "hsl": "12 50% 9%",
+      "legacyHsl": "5 62% 10%",
+      "pantone": "4975 C",
+      "legacyPantone": "4975 C",
+      "textOnDark": true
+    }
+  ],
+  "gradients": [
+    {
+      "id": "amber-dusk",
+      "name": "Amber Dusk",
+      "legacyName": "Amber Dusk",
+      "fromHex": "#C86A1E",
+      "toHex": "#E4A876",
+      "fromRgb": "200 106 30",
+      "toRgb": "228 168 118",
+      "legacyFromRgb": "217 119 25",
+      "legacyToRgb": "232 165 134",
+      "css": "linear-gradient(180deg, #C86A1E 0%, rgb(228, 168, 118) 100%)",
+      "legacyCss": "linear-gradient(180deg, #D97719 0%, rgb(232, 165, 134) 100%)",
+      "textOnDark": false
+    },
+    {
+      "id": "cedar-smoke",
+      "name": "Cedar Smoke",
+      "legacyName": "Espresso Mist",
+      "fromHex": "#24110C",
+      "toHex": "#8C4E29",
+      "fromRgb": "36 17 12",
+      "toRgb": "140 78 41",
+      "legacyFromRgb": "43 13 10",
+      "legacyToRgb": "158 194 214",
+      "css": "linear-gradient(180deg, #24110C 0%, rgb(140, 78, 41) 100%)",
+      "legacyCss": "linear-gradient(180deg, #2B0D0A 0%, rgb(158, 194, 214) 100%)",
+      "textOnDark": true
+    },
+    {
+      "id": "cappuccino-pour",
+      "name": "Cappuccino Pour",
+      "legacyName": "Cappuccino Pour",
+      "fromHex": "#EFE7DA",
+      "toHex": "#8B532B",
+      "fromRgb": "239 231 218",
+      "toRgb": "139 83 43",
+      "legacyFromRgb": "245 235 220",
+      "legacyToRgb": "138 86 48",
+      "css": "linear-gradient(180deg, #EFE7DA 0%, rgb(139, 83, 43) 100%)",
+      "legacyCss": "linear-gradient(180deg, #F5EBDC 0%, rgb(138, 86, 48) 100%)",
+      "textOnDark": false
+    },
+    {
+      "id": "velvet-ristretto",
+      "name": "Velvet Ristretto",
+      "legacyName": "Velvet Roast",
+      "fromHex": "#2E120D",
+      "toHex": "#C97A5B",
+      "fromRgb": "46 18 13",
+      "toRgb": "201 122 91",
+      "legacyFromRgb": "51 19 17",
+      "legacyToRgb": "228 152 132",
+      "css": "linear-gradient(180deg, #2E120D 0%, rgb(201, 122, 91) 100%)",
+      "legacyCss": "linear-gradient(180deg, #331311 0%, rgb(228, 152, 132) 100%)",
+      "textOnDark": true
+    }
+  ],
+  "resources": [
+    {
+      "label": "Logo package",
+      "file": "crema-logo-kit.zip — SVG / PNG / Outline",
+      "button": "Download ZIP",
+      "href": "/downloads/crema-logo-kit.zip",
+      "filename": "crema-logo-kit.zip"
+    },
+    {
+      "label": "Design tokens pack",
+      "legacyLabel": "Menu and poster templates",
+      "file": "crema-design-tokens.zip — CSS / JSON / Tailwind",
+      "button": "Download ZIP",
+      "href": "/downloads/crema-design-tokens.zip",
+      "filename": "crema-design-tokens.zip"
+    },
+    {
+      "label": "Print production colour sheet",
+      "file": "crema-colour-production-sheet.pdf — A4 Print Spec",
+      "button": "Download PDF",
+      "href": "/downloads/crema-colour-production-sheet.pdf",
+      "filename": "crema-colour-production-sheet.pdf"
+    }
+  ],
+  "sections": [
+    { "num": "1", "id": "cover", "label": "Cover", "tag": "Intro" },
+    { "num": "2", "id": "contents", "label": "Contents", "tag": "Index" },
+    { "num": "3", "id": "who-we-are", "label": "Who we are", "tag": "Position" },
+    { "num": "4", "id": "logo", "label": "Logo", "tag": "Identity" },
+    { "num": "5", "id": "colour", "label": "Colour", "tag": "Palette" },
+    { "num": "6", "id": "typography", "label": "Typography", "tag": "Voice" },
+    { "num": "7", "id": "photography", "label": "Photography", "tag": "Image" },
+    { "num": "8", "id": "in-use", "label": "Brand in use", "tag": "Applied" },
+    { "num": "9", "id": "resources", "label": "Resources", "tag": "Files" }
+  ],
+  "brandInUse": {
+    "intro": "Applications should feel physical and tactile: cotton menus, checkered roast boxes, handheld cups, canvas awnings, posters, and dusk interiors.",
+    "menuFlatlay": "Tactile cotton menu — 320gsm sheet with brass corner clip, ceramic demitasse, kouign-amann, and debossed pulp coaster.",
+    "parlourService": "Parlour service — checkered roast gable box, fluted glass, and brass tray in dusk light.",
+    "packagingBoxes": "Roast & pastry boxes — Warm Timber checkerboard stock and debossed cotton labels.",
+    "takeawayCup": "Handheld takeaway cup: sculpted crema wordmark wraps warm Steamed Milk stock against sunlit ceramic tiles.",
+    "storefrontSignage": "Storefront signage: woven Warm Timber canvas awning and hanging blade banner over fluted dusk glass."
+  }
+}

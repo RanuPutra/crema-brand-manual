@@ -1,0 +1,1128 @@
+/* CREMA Living Editorial Design System — Proiectum Studio */
+
+:root {
+  --crema-paper: #f4efe6;
+  --crema-milk: #ebe4d7;
+  --crema-espresso: #24110c;
+  --crema-ink: #1b120e;
+  --crema-muted: #594a42;
+  --crema-amber: #dda04b;
+  --crema-timber: #8c4e29;
+  --crema-hairline: rgba(36, 17, 12, 0.16);
+}
+
+/* CREMA Original Drip Typography System: Rubik Display · Geist Body · Geist Mono (local WOFF2 in index.html) */
+body {
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  background-color: var(--crema-paper) !important;
+  color: var(--crema-ink);
+}
+
+/* Warm Timber (#8C4E29) Swatch #1 crisp white contrast */
+.framer-18rxgoe,
+.framer-18rxgoe p,
+.framer-18rxgoe span,
+.framer-18rxgoe .crema-swatch-meta,
+.framer-1vcwav5,
+.framer-1vcwav5 p,
+[data-framer-name="Powder Blue"],
+[data-framer-name="Powder Blue"] p {
+  --framer-text-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Understated Monograph Edition Tag under Sidebar Brand Block */
+[data-framer-name="Brand Block"] {
+  position: relative;
+}
+
+[data-framer-name="Brand Block"]::after {
+  content: "EDITION 01 · A-FRAME ESPRESSO";
+  display: block;
+  margin-top: 8px;
+  font-family: "Geist Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--crema-muted);
+}
+
+/* Smooth editorial scroll behavior (respecting reduced motion) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Offset anchor targets slightly for comfortable breathing room */
+section[id],
+div[id] {
+  scroll-margin-top: 24px;
+}
+
+/* 1. Sidebar Active Scrollspy & Reading Progress Hairline */
+[data-framer-name="Section Index"] {
+  position: fixed;
+  padding-bottom: 24px !important;
+}
+
+.crema-progress-rail {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(17, 17, 15, 0.06);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.crema-progress-fill {
+  width: 100%;
+  height: 0%;
+  background: var(--crema-espresso);
+  transition: height 90ms linear;
+}
+
+.crema-mobile-progress {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(17, 17, 15, 0.08);
+  z-index: 40;
+  pointer-events: none;
+}
+
+.crema-mobile-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--crema-espresso);
+}
+
+@media (max-width: 1199.98px) {
+  .crema-mobile-progress {
+    display: block;
+  }
+}
+
+a.crema-nav-active {
+  position: relative;
+}
+
+a.crema-nav-active p {
+  color: var(--crema-ink) !important;
+  font-weight: 600 !important;
+}
+
+a.crema-nav-active::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--crema-espresso);
+}
+
+/* Sidebar Utility Footer */
+.crema-sidebar-dock {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--crema-hairline);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: "Geist Mono", monospace;
+}
+
+.crema-dock-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crema-mono-btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--crema-hairline);
+  color: var(--crema-ink);
+  font-family: "Geist Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.crema-mono-btn:hover,
+.crema-mono-btn:focus-visible {
+  background: var(--crema-espresso);
+  color: var(--crema-paper);
+  border-color: var(--crema-espresso);
+  outline: none;
+}
+
+.crema-mono-btn.is-active {
+  background: var(--crema-espresso);
+  color: var(--crema-paper);
+  border-color: var(--crema-espresso);
+}
+
+.crema-studio-credit {
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+  color: var(--crema-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.crema-studio-credit:hover {
+  color: var(--crema-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Mobile floating quick-jump pill */
+.crema-mobile-cmd-btn {
+  display: none;
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 45;
+  background: var(--crema-paper);
+  border: 1px solid var(--crema-espresso);
+  color: var(--crema-espresso);
+  font-family: "Geist Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 7px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+@media (max-width: 1199.98px) {
+  .crema-mobile-cmd-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+/* 2. Interactive Colour Swatches & Gradients */
+.crema-swatch-card,
+.crema-gradient-card {
+  position: relative !important;
+  cursor: pointer !important;
+  transition: transform 160ms ease;
+}
+
+.crema-swatch-card:hover,
+.crema-gradient-card:hover {
+  transform: translateY(-2px);
+}
+
+.crema-swatch-meta {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  pointer-events: auto;
+  z-index: 3;
+}
+
+.crema-wcag-badge {
+  padding: 3px 5px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.crema-fmt-btn {
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  border: 1px solid currentColor;
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.crema-fmt-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.crema-grad-cue {
+  position: absolute;
+  right: 14px;
+  bottom: 11px;
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  transition: opacity 140ms ease;
+  pointer-events: none;
+}
+
+.crema-gradient-card:hover .crema-grad-cue {
+  opacity: 1;
+}
+
+/* 3. Interactive Logo Sandbox (Section 4) */
+[data-framer-name="Logo Asset Placeholder"] {
+  position: relative !important;
+}
+
+.crema-logo-stage {
+  position: absolute;
+  inset: 0;
+  bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease, background-color 180ms ease;
+  z-index: 2;
+}
+
+.crema-logo-stage.is-surface-active {
+  opacity: 1;
+}
+
+.crema-logo-stage-svg {
+  width: 68%;
+  max-width: 680px;
+  height: auto;
+  display: block;
+}
+
+.crema-clearspace-overlay {
+  position: absolute;
+  inset: 0;
+  bottom: 36px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crema-clearspace-overlay.is-visible {
+  opacity: 1;
+}
+
+.crema-clearspace-box {
+  position: relative;
+  width: 78%;
+  height: 58%;
+  border: 1px dashed rgba(43, 13, 10, 0.55);
+  box-shadow: 0 0 0 9999px rgba(244, 241, 232, 0.14);
+}
+
+.crema-clearspace-overlay.is-dark .crema-clearspace-box {
+  border-color: rgba(244, 241, 232, 0.65);
+  box-shadow: 0 0 0 9999px rgba(17, 17, 15, 0.16);
+}
+
+.crema-clearspace-inner {
+  position: absolute;
+  inset: 14% 7%;
+  border: 1px dotted rgba(43, 13, 10, 0.35);
+}
+
+.crema-clearspace-overlay.is-dark .crema-clearspace-inner {
+  border-color: rgba(244, 241, 232, 0.45);
+}
+
+.crema-clearspace-tag {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+  color: var(--crema-espresso);
+  background: var(--crema-paper);
+  padding: 2px 5px;
+  border: 1px solid rgba(43, 13, 10, 0.25);
+}
+
+.crema-sandbox-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  z-index: 4;
+  background: rgba(244, 241, 232, 0.94);
+  border-top: 1px solid var(--crema-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 12px;
+  font-family: "Geist Mono", monospace;
+  font-size: 10px;
+}
+
+.crema-sandbox-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.crema-surface-btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgba(17, 17, 15, 0.2);
+  color: var(--crema-ink);
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 3px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.crema-surface-btn.is-active {
+  background: var(--crema-espresso);
+  color: var(--crema-paper);
+  border-color: var(--crema-espresso);
+}
+
+.crema-swatch-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  border: 1px solid rgba(17, 17, 15, 0.3);
+  display: inline-block;
+}
+
+@media (max-width: 640px) {
+  [data-framer-name="Logo Asset Placeholder"] {
+    padding-bottom: 64px !important;
+  }
+
+  .crema-logo-stage,
+  .crema-clearspace-overlay {
+    bottom: 64px;
+  }
+
+  .crema-sandbox-bar {
+    height: auto;
+    min-height: 54px;
+    padding: 6px 8px;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .crema-sandbox-group {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 4px;
+  }
+
+  .crema-surface-btn {
+    font-size: 8.5px;
+    padding: 3px 5px;
+  }
+}
+
+/* 4. Live Type Specimen (Section 6) */
+.crema-type-hint-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  margin-bottom: 6px;
+  border-bottom: 1px dashed var(--crema-hairline);
+  font-family: "Geist Mono", monospace;
+  font-size: 10px;
+  color: var(--crema-muted);
+  letter-spacing: 0.04em;
+}
+
+.crema-type-editable {
+  cursor: text;
+  transition: outline-color 140ms ease, background-color 140ms ease;
+  border-radius: 2px;
+}
+
+.crema-type-editable:hover {
+  background-color: rgba(43, 13, 10, 0.03);
+}
+
+.crema-type-editable:focus {
+  outline: 1px dashed rgba(43, 13, 10, 0.45);
+  outline-offset: 4px;
+  background-color: rgba(255, 255, 255, 0.45);
+}
+
+/* 5. Editorial Command Palette (Cmd+K) */
+.crema-cmd-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 15, 0.42);
+  z-index: 9990;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 16px 24px;
+}
+
+.crema-cmd-backdrop.is-open {
+  display: flex;
+}
+
+.crema-cmd-dialog {
+  width: 100%;
+  max-width: 540px;
+  background: var(--crema-paper);
+  border: 1px solid var(--crema-espresso);
+  color: var(--crema-ink);
+  font-family: "Geist Mono", monospace;
+}
+
+.crema-cmd-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--crema-hairline);
+  padding: 10px 14px;
+  gap: 10px;
+}
+
+.crema-cmd-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: "Geist Mono", monospace;
+  font-size: 13px;
+  color: var(--crema-ink);
+  outline: none;
+}
+
+.crema-cmd-esc {
+  font-size: 10px;
+  color: var(--crema-muted);
+  border: 1px solid var(--crema-hairline);
+  padding: 3px 6px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.crema-cmd-list {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.crema-cmd-group {
+  padding: 8px 14px 4px;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--crema-muted);
+  text-transform: uppercase;
+}
+
+.crema-cmd-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 8px 14px;
+  font-family: "Geist Mono", monospace;
+  font-size: 12px;
+  color: var(--crema-ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.crema-cmd-item.is-selected,
+.crema-cmd-item:hover {
+  background: var(--crema-milk);
+}
+
+.crema-cmd-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.crema-cmd-chip {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(17, 17, 15, 0.2);
+  flex: none;
+}
+
+.crema-cmd-hint {
+  font-size: 10px;
+  color: var(--crema-muted);
+  white-space: nowrap;
+}
+
+.crema-cmd-footer {
+  border-top: 1px solid var(--crema-hairline);
+  padding: 7px 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9.5px;
+  color: var(--crema-muted);
+}
+
+/* 6. Crisp Editorial Toast */
+.crema-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9995;
+  background: var(--crema-espresso);
+  color: var(--crema-paper);
+  border: 1px solid rgba(244, 241, 232, 0.25);
+  font-family: "Geist Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 9px 14px;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.crema-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1199.98px) {
+  .crema-toast {
+    bottom: 52px;
+    right: 14px;
+  }
+}
+
+/* 7. Print-Ready A4 Brandbook Stylesheet */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: #f4efe6 !important;
+  }
+
+  [data-framer-name="Section Index"],
+  [data-framer-name="Responsive Navigation"],
+  .crema-progress-rail,
+  .crema-mobile-progress,
+  .crema-sidebar-dock,
+  .crema-mobile-cmd-btn,
+  .crema-sandbox-bar,
+  .crema-type-hint-row,
+  .crema-cmd-backdrop,
+  .crema-toast,
+  .crema-lightbox,
+  .crema-zoom-frame::after {
+    display: none !important;
+  }
+
+  section,
+  [data-framer-name="Brand Colour"],
+  [data-framer-name="10.4 Gradient System"],
+  [data-framer-name="14 Resources"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* 8. Click-to-Zoom Editorial Lightbox */
+.crema-zoom-frame {
+  position: relative;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.crema-zoom-frame img {
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.crema-zoom-frame:hover img {
+  transform: scale(1.022);
+}
+
+.crema-zoom-frame::after {
+  content: "INSPECT ↗";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 6;
+  background: rgba(36, 17, 12, 0.84);
+  color: #f4efe6;
+  border: 1px solid rgba(244, 239, 230, 0.28);
+  font-family: "Geist Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 3px;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
+.crema-zoom-frame:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.crema-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px 28px;
+  background: rgba(18, 9, 6, 0.92);
+  backdrop-filter: blur(12px);
+  color: #f4efe6;
+}
+
+.crema-lightbox.is-open {
+  display: flex;
+}
+
+.crema-lb-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: "Geist Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: rgba(244, 239, 230, 0.78);
+}
+
+.crema-lb-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crema-lb-btn {
+  appearance: none;
+  background: rgba(244, 239, 230, 0.08);
+  color: #f4efe6;
+  border: 1px solid rgba(244, 239, 230, 0.24);
+  border-radius: 3px;
+  font-family: "Geist Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.crema-lb-btn:hover {
+  background: #8c4e29;
+  border-color: #dda04b;
+}
+
+.crema-lb-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.crema-lb-img {
+  max-width: min(92vw, 1180px);
+  max-height: 76vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid rgba(244, 239, 230, 0.16);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+}
+
+.crema-lb-bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid rgba(244, 239, 230, 0.16);
+  padding-top: 12px;
+}
+
+.crema-lb-caption {
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #f4efe6;
+  max-width: 720px;
+}
+
+.crema-lb-count {
+  font-family: "Geist Mono", monospace;
+  font-size: 10.5px;
+  color: #dda04b;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* 9. Rich Visual Production Kit Cards (Section 9 Resources) */
+.crema-resource-card {
+  cursor: default !important;
+  background: rgba(235, 228, 215, 0.44) !important;
+  border: 1px solid rgba(36, 17, 12, 0.15) !important;
+  border-radius: 6px !important;
+  padding: 18px 20px !important;
+  gap: 20px !important;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.crema-resource-card:hover {
+  border-color: #8c4e29 !important;
+  background: rgba(235, 228, 215, 0.72) !important;
+}
+
+.crema-resource-thumb {
+  width: 186px;
+  height: 112px;
+  flex: none;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(36, 17, 12, 0.18);
+  position: relative;
+  order: -1;
+}
+
+.crema-thumb-logo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+.crema-thumb-half {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+}
+
+.crema-thumb-half.is-dark {
+  background: #24110c;
+  color: #f4efe6;
+}
+
+.crema-thumb-half.is-light {
+  background: #ebe4d7;
+  color: #24110c;
+}
+
+.crema-thumb-half svg {
+  width: 68px;
+  height: auto;
+}
+
+.crema-thumb-micro {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  font-family: "Geist Mono", monospace;
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.crema-thumb-tokens {
+  width: 100%;
+  height: 100%;
+  background: #1b120e;
+  color: #f4efe6;
+  padding: 11px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: "Geist Mono", monospace;
+}
+
+.crema-token-swatches {
+  display: flex;
+  gap: 5px;
+}
+
+.crema-token-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(244, 239, 230, 0.25);
+}
+
+.crema-token-lines {
+  font-size: 8.5px;
+  line-height: 1.48;
+  color: rgba(244, 239, 230, 0.85);
+}
+
+.crema-token-lines span {
+  color: #dda04b;
+}
+
+.crema-thumb-sheet {
+  width: 100%;
+  height: 100%;
+  background: #2e1b13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.crema-sheet-mini {
+  width: 82px;
+  height: 94px;
+  background: #f4efe6;
+  color: #1b120e;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.48);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: rotate(-2deg);
+}
+
+.crema-sheet-head {
+  font-family: "Geist Mono", monospace;
+  font-size: 6.5px;
+  letter-spacing: 0.06em;
+  color: #594a42;
+  border-bottom: 1px solid rgba(36, 17, 12, 0.2);
+  padding-bottom: 3px;
+}
+
+.crema-sheet-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+.crema-sheet-bars span {
+  height: 18px;
+  border-radius: 1px;
+}
+
+.crema-sheet-grads {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+
+.crema-sheet-grads span {
+  height: 13px;
+  border-radius: 1px;
+}
+
+.crema-resource-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.crema-res-pill {
+  font-family: "Geist Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: #594a42;
+  border: 1px solid rgba(36, 17, 12, 0.18);
+  background: rgba(244, 239, 230, 0.72);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* 10. Footer Sidebar Clearance & Mobile Zero-Overflow Responsive Guard */
+@media (min-width: 1200px) {
+  .framer-glCvu .framer-1oxql0d-container {
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 0 72px 48px 348px !important;
+    box-sizing: border-box !important;
+  }
+
+  .framer-4UNWI.framer-1cy66n1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 24px 0 0 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  .framer-glCvu .framer-1oxql0d-container {
+    width: 100% !important;
+    max-width: 810px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 0 32px 48px !important;
+    box-sizing: border-box !important;
+  }
+
+  .framer-4UNWI.framer-1cy66n1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 24px 0 0 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 809.98px) {
+  html,
+  body,
+  #main {
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  .framer-oL1oa.framer-72rtr7,
+  .framer-glCvu.framer-4acx73 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .framer-oL1oa .framer-45e98r,
+  .framer-oL1oa .framer-79u5t9-container,
+  .framer-oL1oa .framer-q5sebp,
+  .framer-7ANbF.framer-1ddsa6f,
+  .framer-7ANbF.framer-v-uatbts.framer-1ddsa6f {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-framer-name="Editorial Index"] > a {
+    grid-template-columns: minmax(28px, auto) minmax(0, 1fr) auto !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  [data-framer-name="Editorial Index"] > a > div {
+    grid-column: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .framer-glCvu .framer-1oxql0d-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 20px 72px !important;
+    box-sizing: border-box !important;
+  }
+
+  .framer-4UNWI.framer-1cy66n1,
+  .framer-4UNWI.framer-1cy66n1.framer-v-jgm908 {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 20px 0 0 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .framer-4UNWI .framer-15qivu5,
+  .framer-4UNWI .framer-18irkk0 {
+    grid-column: 1 / -1 !important;
+    place-self: start !important;
+    width: 100% !important;
+  }
+
+  .crema-resource-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 15px !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .crema-resource-card [data-framer-name="Asset Info"] {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .crema-resource-thumb {
+    width: 100% !important;
+    height: 118px !important;
+  }
+
+  .crema-resource-card [data-framer-name="Download Button"] {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .crema-lightbox {
+    padding: 14px 16px;
+  }
+
+  .crema-lb-bottom {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
