@@ -598,7 +598,18 @@ const FRAMER_URL_REPLACEMENTS = (() => {
   return pairs;
 })();
 
-const ASSET_VER = "4";
+const ASSET_VER = "5";
+
+function copyVendorAssets() {
+  const srcLenis = path.join(ROOT, "node_modules", "lenis", "dist", "lenis.min.js");
+  if (!fs.existsSync(srcLenis)) {
+    throw new Error(`Missing Lenis vendor bundle at ${srcLenis}. Run npm install lenis first.`);
+  }
+  const destLenis = path.join(ROOT, "public", "assets", "vendor", "lenis.min.js");
+  fs.mkdirSync(path.dirname(destLenis), { recursive: true });
+  fs.copyFileSync(srcLenis, destLenis);
+  console.log(`Copied ${destLenis} (${fs.statSync(destLenis).size} bytes)`);
+}
 
 function bumpAssetUrls(text) {
   return text.replace(
@@ -848,8 +859,15 @@ function patchIndexHtml() {
     `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`
   );
 
-  // 6. Inject /crema-living.css & /crema-living.js idempotently with v3 cache buster
+  // 6. Bypass Framer inline reload script on internal sidebar/contents links
+  html = html.replace(
+    "if(u.pathname===location.pathname&&u.hash)return;",
+    'if(u.pathname===location.pathname&&(u.hash||a.getAttribute("href")==="./"||a.hasAttribute("data-crema-target")||a.closest(\'[data-framer-name="Section Index"],#contents,[data-framer-name*="Index"]\')))return;'
+  );
+
+  // 7. Inject local Lenis vendor bundle, /crema-living.css & /crema-living.js idempotently with v5 cache buster
   html = html.replace(/\/crema-living\.css(?:\?v=\d+)?/g, `/crema-living.css?v=${ASSET_VER}`);
+  html = html.replace(/\/assets\/vendor\/lenis\.min\.js(?:\?v=\d+)?/g, `/assets/vendor/lenis.min.js?v=${ASSET_VER}`);
   html = html.replace(/\/crema-living\.js(?:\?v=\d+)?/g, `/crema-living.js?v=${ASSET_VER}`);
   if (!html.includes("/crema-living.css")) {
     html = html.replace(
@@ -857,10 +875,16 @@ function patchIndexHtml() {
       `    <link rel="stylesheet" href="/crema-living.css?v=${ASSET_VER}">\n</head>`
     );
   }
+  if (!html.includes("/assets/vendor/lenis.min.js")) {
+    html = html.replace(
+      `<script defer src="/crema-living.js?v=${ASSET_VER}"></script>`,
+      `<script defer src="/assets/vendor/lenis.min.js?v=${ASSET_VER}"></script>\n    <script defer src="/crema-living.js?v=${ASSET_VER}"></script>`
+    );
+  }
   if (!html.includes("/crema-living.js")) {
     html = html.replace(
       "</body>",
-      `    <script defer src="/crema-living.js?v=${ASSET_VER}"></script>\n</body>`
+      `    <script defer src="/assets/vendor/lenis.min.js?v=${ASSET_VER}"></script>\n    <script defer src="/crema-living.js?v=${ASSET_VER}"></script>\n</body>`
     );
   }
 
@@ -876,6 +900,7 @@ function syntaxCheckSiteModules() {
   console.log(`Syntax check passed on ${mjsFiles.length} .mjs site modules.`);
 }
 
+copyVendorAssets();
 writeDesignTokensZip();
 patchHomeBundle();
 patchToplevelBundle();

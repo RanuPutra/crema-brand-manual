@@ -109,7 +109,7 @@
       kind: "sheet",
       href: "/downloads/crema-colour-production-sheet.pdf",
       filename: "crema-colour-production-sheet.pdf",
-      pills: ["A4 PRINT PDF", "CMYK + PANTONE", "112 KB"],
+      pills: ["A4 PRINT PDF", "CMYK + PANTONE", "58 KB"],
     },
   ];
 
@@ -124,6 +124,14 @@
   var lightboxImgs = [];
   var lightboxIdx = 0;
   var isLightboxOpen = false;
+  var lenis = null;
+  var lenisRafId = 0;
+  var revealObserver = null;
+  var parallaxNodes = [];
+  var prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function makeSvg(fillColor) {
     return (
@@ -198,20 +206,121 @@
     }
   }
 
+  function resolveSectionIdFromLink(a) {
+    if (!a) return "";
+    var href = a.getAttribute("href") || "";
+    if (/^(?:https?:|mailto:|tel:)/i.test(href)) return "";
+    var explicit = a.getAttribute("data-crema-target");
+    if (explicit && document.getElementById(explicit)) return explicit;
+
+    var hashIdx = href.indexOf("#");
+    if (hashIdx !== -1) {
+      var hashId = href.slice(hashIdx + 1);
+      if (hashId && document.getElementById(hashId)) return hashId;
+    }
+
+    var name = (a.getAttribute("data-framer-name") || "").toLowerCase();
+    if (
+      name === "brand block" ||
+      a.classList.contains("framer-1szwlhw") ||
+      a.classList.contains("framer-121na2m")
+    ) {
+      return "cover";
+    }
+
+    var rawText = (a.textContent || "").replace(/\s+/g, " ").trim();
+    if (!rawText) return "";
+    var numMatch = rawText.match(/^([1-9])\b/);
+    if (numMatch) {
+      var idx = parseInt(numMatch[1], 10) - 1;
+      if (SECTIONS[idx] && document.getElementById(SECTIONS[idx].id)) {
+        return SECTIONS[idx].id;
+      }
+    }
+
+    var lower = rawText.toLowerCase();
+    for (var i = 0; i < SECTIONS.length; i++) {
+      if (lower.indexOf(SECTIONS[i].label.toLowerCase()) !== -1) {
+        if (document.getElementById(SECTIONS[i].id)) return SECTIONS[i].id;
+      }
+    }
+    return "";
+  }
+
+  function wireAllNavigationLinks() {
+    var selector =
+      '[data-framer-name="Section Index"] a[href], #contents a[href], [data-framer-name="Responsive Navigation"] a[href], a.framer-styles-preset-12swkz5[href], a[href="./"]';
+    document.querySelectorAll(selector).forEach(function (a) {
+      var id = resolveSectionIdFromLink(a);
+      if (!id) return;
+      if (a.getAttribute("data-crema-target") !== id) {
+        a.setAttribute("data-crema-target", id);
+      }
+      var desiredHref = "#" + id;
+      if (a.getAttribute("href") !== desiredHref) {
+        a.setAttribute("href", desiredHref);
+      }
+    });
+  }
+
+  function revealVisibleNow() {
+    var vh = window.innerHeight || 900;
+    document.querySelectorAll(".crema-reveal-up:not(.is-revealed), .crema-reveal-media:not(.is-revealed)").forEach(function (el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top <= vh * 0.96) {
+        el.classList.add("is-revealed");
+        if (revealObserver) revealObserver.unobserve(el);
+      }
+    });
+  }
+
+  function revealSectionAndAbove(target) {
+    if (!target) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    var targetBottom = target.getBoundingClientRect().top + scrollTop + (target.offsetHeight || 600);
+    document.querySelectorAll(".crema-reveal-up:not(.is-revealed), .crema-reveal-media:not(.is-revealed)").forEach(function (el) {
+      if (target.contains(el) || el.getBoundingClientRect().top + scrollTop <= targetBottom + 160) {
+        el.classList.add("is-revealed");
+        if (revealObserver) revealObserver.unobserve(el);
+      }
+    });
+  }
+
   function scrollToSection(id) {
     var target = document.getElementById(id);
     if (!target) return;
-    var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+    revealSectionAndAbove(target);
+    if (lenis && !prefersReducedMotion) {
+      lenis.start();
+      if (id === "cover") {
+        lenis.scrollTo(0, { duration: 1.15 });
+      } else {
+        lenis.scrollTo(target, { offset: -20, duration: 1.15 });
+      }
+      return;
+    }
+    if (id === "cover") {
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    } else {
+      target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+    }
   }
 
-  /* 1. Scrollspy + Reading Progress Hairline + Sidebar Dock */
+  /* 1. Scrollspy + Sliding Nav Indicator + Reading Progress Hairline + Sidebar Dock */
   var mobileProgressFill = null;
   function setupScrollspyAndNav() {
+    wireAllNavigationLinks();
+
     var navs = document.querySelectorAll('[data-framer-name="Section Index"]');
     navs.forEach(function (nav) {
       if (nav.getAttribute("data-crema-enhanced") === "1") return;
       nav.setAttribute("data-crema-enhanced", "1");
+      nav.classList.add("crema-has-indicator");
+
+      var indicator = document.createElement("div");
+      indicator.className = "crema-nav-indicator";
+      indicator.setAttribute("aria-hidden", "true");
+      nav.appendChild(indicator);
 
       var rail = document.createElement("div");
       rail.className = "crema-progress-rail";
@@ -256,7 +365,10 @@
   var scrollTicking = false;
   function updateScrollspy() {
     scrollTicking = false;
-    var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    var scrollTop =
+      lenis && typeof lenis.scroll === "number"
+        ? lenis.scroll
+        : window.scrollY || document.documentElement.scrollTop || 0;
     var maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     var pct = Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
 
@@ -268,30 +380,74 @@
     }
 
     var activeId = SECTIONS[0].id;
-    var probeY = scrollTop + window.innerHeight * 0.28;
-    for (var i = 0; i < SECTIONS.length; i++) {
-      var sec = document.getElementById(SECTIONS[i].id);
-      if (sec) {
-        var top = sec.getBoundingClientRect().top + scrollTop;
-        if (top <= probeY) activeId = SECTIONS[i].id;
+    if (scrollTop + window.innerHeight >= document.documentElement.scrollHeight - 28) {
+      activeId = SECTIONS[SECTIONS.length - 1].id;
+    } else {
+      var probeY = scrollTop + window.innerHeight * 0.28;
+      for (var i = 0; i < SECTIONS.length; i++) {
+        var sec = document.getElementById(SECTIONS[i].id);
+        if (sec) {
+          var top = sec.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop || 0);
+          if (top <= probeY) activeId = SECTIONS[i].id;
+        }
       }
     }
 
-    document.querySelectorAll('[data-framer-name="Section Index"] a[href*="#"]').forEach(function (a) {
-      var href = a.getAttribute("href") || "";
-      var hash = href.slice(href.indexOf("#") + 1);
-      if (hash === activeId) {
-        a.classList.add("crema-nav-active");
-      } else {
-        a.classList.remove("crema-nav-active");
+    document.querySelectorAll('[data-framer-name="Section Index"]').forEach(function (nav) {
+      var activeLink = null;
+      nav.querySelectorAll("a[data-crema-target]").forEach(function (a) {
+        var name = (a.getAttribute("data-framer-name") || "").toLowerCase();
+        if (name === "brand block") return;
+        var targetId = a.getAttribute("data-crema-target");
+        if (targetId === activeId) {
+          a.classList.add("crema-nav-active");
+          activeLink = a;
+        } else {
+          a.classList.remove("crema-nav-active");
+        }
+      });
+
+      var ind = nav.querySelector(".crema-nav-indicator");
+      if (ind && activeLink) {
+        var navRect = nav.getBoundingClientRect();
+        var linkRect = activeLink.getBoundingClientRect();
+        var relY = linkRect.top - navRect.top + (nav.scrollTop || 0) + Math.max(0, (linkRect.height - 14) * 0.5);
+        ind.style.setProperty("--crema-ind-y", Math.round(relY) + "px");
+        ind.classList.add("is-ready");
       }
     });
+
+    if (document.documentElement.classList.contains("crema-motion-ready")) {
+      revealVisibleNow();
+    }
+  }
+
+  function updateParallax() {
+    if (prefersReducedMotion || !parallaxNodes.length) return;
+    var vh = window.innerHeight || 900;
+    for (var i = 0; i < parallaxNodes.length; i++) {
+      var img = parallaxNodes[i];
+      if (!img || !img.isConnected) continue;
+      var wrap = img.parentElement;
+      if (!wrap) continue;
+      var r = wrap.getBoundingClientRect();
+      if (r.bottom < -120 || r.top > vh + 120) continue;
+      var center = r.top + r.height * 0.5;
+      var progress = (center - vh * 0.5) / (vh * 0.65);
+      if (progress < -1) progress = -1;
+      if (progress > 1) progress = 1;
+      var shift = -(progress * 15);
+      img.style.setProperty("--crema-py", shift.toFixed(1) + "px");
+    }
   }
 
   function onScroll() {
     if (!scrollTicking) {
       scrollTicking = true;
-      requestAnimationFrame(updateScrollspy);
+      requestAnimationFrame(function () {
+        updateScrollspy();
+        updateParallax();
+      });
     }
   }
 
@@ -684,6 +840,7 @@
     lightboxEl.setAttribute("role", "dialog");
     lightboxEl.setAttribute("aria-modal", "true");
     lightboxEl.setAttribute("aria-label", "Artwork Inspector");
+    lightboxEl.setAttribute("data-lenis-prevent", "true");
     lightboxEl.innerHTML =
       '<div class="crema-lb-topbar">' +
       '  <span class="crema-lb-tag">CREMA · PLATE</span>' +
@@ -744,6 +901,7 @@
     var found = allImgs.indexOf(targetImg);
     lightboxIdx = found !== -1 ? found : 0;
     isLightboxOpen = true;
+    if (lenis) lenis.stop();
     renderLightboxSlide();
     lightboxEl.classList.add("is-open");
   }
@@ -752,6 +910,7 @@
     if (!lightboxEl) return;
     isLightboxOpen = false;
     lightboxEl.classList.remove("is-open");
+    if (lenis && !isCmdOpen) lenis.start();
   }
 
   function setupGalleryLightbox() {
@@ -940,14 +1099,15 @@
     cmdBackdrop.setAttribute("role", "dialog");
     cmdBackdrop.setAttribute("aria-modal", "true");
     cmdBackdrop.setAttribute("aria-label", "CREMA Brand Manual Quick Index");
+    cmdBackdrop.setAttribute("data-lenis-prevent", "true");
     cmdBackdrop.innerHTML =
-      '<div class="crema-cmd-dialog">' +
+      '<div class="crema-cmd-dialog" data-lenis-prevent="true">' +
       '  <div class="crema-cmd-header">' +
       '    <span style="font-size:11px;color:#4A4740;">⌘K</span>' +
       '    <input type="text" class="crema-cmd-input" placeholder="Jump to section, copy colour, export tokens..." aria-label="Search manual" />' +
       '    <button type="button" class="crema-cmd-esc">ESC</button>' +
       "  </div>" +
-      '  <div class="crema-cmd-list"></div>' +
+      '  <div class="crema-cmd-list" data-lenis-prevent="true"></div>' +
       '  <div class="crema-cmd-footer"><span>↑↓ NAVIGATE · ↵ SELECT</span><span>CREMA · PROIECTUM STUDIO</span></div>' +
       "</div>";
 
@@ -967,6 +1127,7 @@
   function openCmdPalette() {
     ensureCmdPalette();
     isCmdOpen = true;
+    if (lenis) lenis.stop();
     cmdSelectedIdx = 0;
     cmdBackdrop.classList.add("is-open");
     var input = cmdBackdrop.querySelector(".crema-cmd-input");
@@ -981,19 +1142,139 @@
     if (!cmdBackdrop) return;
     isCmdOpen = false;
     cmdBackdrop.classList.remove("is-open");
+    if (lenis && !isLightboxOpen) lenis.start();
+  }
+
+  /* 7. Awwwards Motion Choreography: Lenis + Reveals + Parallax + Magnetic Buttons */
+  function initSmoothScroll() {
+    if (prefersReducedMotion || lenis || typeof window.Lenis !== "function") return;
+    lenis = new window.Lenis({
+      duration: 1.15,
+      easing: function (t) {
+        return Math.min(1, 1.001 - Math.pow(2, -10 * t));
+      },
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.35,
+      autoRaf: false,
+    });
+    function rafLoop(time) {
+      if (lenis) lenis.raf(time);
+      updateScrollspy();
+      updateParallax();
+      lenisRafId = requestAnimationFrame(rafLoop);
+    }
+    lenisRafId = requestAnimationFrame(rafLoop);
+  }
+
+  function tagRevealElement(el, cls, delayMs, immediateReveal) {
+    if (!el || el.getAttribute("data-crema-reveal") === "1") return;
+    el.setAttribute("data-crema-reveal", "1");
+    el.classList.add(cls);
+    if (delayMs > 0) {
+      el.style.setProperty("--crema-delay", delayMs + "ms");
+    }
+    if (immediateReveal) {
+      el.classList.add("is-revealed");
+      return;
+    }
+    if (revealObserver) {
+      revealObserver.observe(el);
+    } else {
+      el.classList.add("is-revealed");
+    }
+  }
+
+  function setupMagneticButtons() {
+    if (prefersReducedMotion) return;
+    if (!window.matchMedia || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    document.querySelectorAll('.crema-mono-btn, [data-framer-name="Download Button"]').forEach(function (btn) {
+      if (btn.getAttribute("data-crema-magnetic") === "1") return;
+      btn.setAttribute("data-crema-magnetic", "1");
+      btn.classList.add("crema-magnetic");
+      btn.addEventListener("mousemove", function (ev) {
+        var r = btn.getBoundingClientRect();
+        var dx = ((ev.clientX - r.left) / Math.max(1, r.width) - 0.5) * 8;
+        var dy = ((ev.clientY - r.top) / Math.max(1, r.height) - 0.5) * 6;
+        btn.style.transform = "translate3d(" + dx.toFixed(1) + "px, " + dy.toFixed(1) + "px, 0)";
+      });
+      btn.addEventListener("mouseleave", function () {
+        btn.style.transform = "translate3d(0, 0, 0)";
+      });
+    });
+  }
+
+  function setupEditorialMotion() {
+    if (!prefersReducedMotion) {
+      document.documentElement.classList.add("crema-motion-ready");
+    }
+    if (!revealObserver && typeof IntersectionObserver !== "undefined" && !prefersReducedMotion) {
+      revealObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting || entry.boundingClientRect.top <= window.innerHeight * 0.96) {
+              entry.target.classList.add("is-revealed");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -6% 0px", threshold: 0.04 }
+      );
+    }
+
+    var vh = window.innerHeight || 900;
+    document
+      .querySelectorAll(
+        '#main h1, #main h2, #main h3, #main [data-framer-name="Intro with Footnote"], #main [data-framer-name="Note"]'
+      )
+      .forEach(function (el) {
+        var inCover = el.closest && el.closest("#cover");
+        var nearTop = inCover || el.getBoundingClientRect().top <= vh * 0.92;
+        tagRevealElement(el, "crema-reveal-up", 0, nearTop);
+      });
+
+    [
+      '[data-framer-name="Editorial Index"] > a',
+      ".crema-swatch-card",
+      ".crema-gradient-card",
+      ".crema-resource-card",
+    ].forEach(function (groupSel) {
+      document.querySelectorAll(groupSel).forEach(function (el, idx) {
+        var nearTop = el.getBoundingClientRect().top <= vh * 0.92;
+        tagRevealElement(el, "crema-reveal-up", (idx % 4) * 70, nearTop);
+      });
+    });
+
+    parallaxNodes = [];
+    document.querySelectorAll(".crema-zoom-frame").forEach(function (wrap, idx) {
+      var inCover = wrap.closest && wrap.closest("#cover");
+      var nearTop = inCover || wrap.getBoundingClientRect().top <= vh * 0.92;
+      tagRevealElement(wrap, "crema-reveal-media", inCover ? 0 : (idx % 3) * 65, nearTop);
+      var img = wrap.querySelector("img");
+      if (img) {
+        img.classList.add("crema-parallax-img");
+        parallaxNodes.push(img);
+      }
+    });
+
+    setupMagneticButtons();
+    revealVisibleNow();
+    updateParallax();
   }
 
   function enhanceAll() {
+    initSmoothScroll();
     setupScrollspyAndNav();
     setupPaletteCards();
     setupLogoSandbox();
     setupLiveTypography();
     setupResourcesAndFooter();
     setupGalleryLightbox();
+    setupEditorialMotion();
     updateScrollspy();
   }
 
-  /* Capture-phase click handling: smooth section anchors + real file downloads ahead of Framer router */
+  /* Capture-phase click handling: bulletproof section navigation + smooth scroll + real file downloads ahead of Framer router */
   document.addEventListener(
     "click",
     function (ev) {
@@ -1014,11 +1295,24 @@
         return;
       }
 
+      var navId = resolveSectionIdFromLink(target);
+      if (navId) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+        scrollToSection(navId);
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + navId);
+        }
+        return;
+      }
+
       if (href.indexOf("#") !== -1 && (href.charAt(0) === "#" || href.indexOf("./#") === 0)) {
         var id = href.slice(href.indexOf("#") + 1);
         if (document.getElementById(id)) {
           ev.preventDefault();
           ev.stopPropagation();
+          if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
           scrollToSection(id);
           if (history.replaceState) {
             history.replaceState(null, "", "#" + id);
